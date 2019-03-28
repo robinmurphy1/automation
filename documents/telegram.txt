@@ -1,0 +1,8 @@
+curl https://api.telegram.org/bot630525668:AAFtnyaswtrcPf1kIbtyr8bHLcyRogMu03s/setWebhook -F "url=http://www.pifarm.co.za/webhook"
+curl https://api.telegram.org/bot630525668:AAFtnyaswtrcPf1kIbtyr8bHLcyRogMu03s/deleteWebhook
+
+{"ok":true,"result":[{"update_id":717898505,
+"message":{"message_id":208,"from":{"id":488104559,"is_bot":false,"first_name":"Robin","last_name":"Murphy","language_code":"en"},"chat":{"id":488104559,"first_name":"Robin","last_name":"Murphy","type":"private"},"date":1553625697,"text":"/token","entities":[{"offset":0,"length":6,"type":"bot_command"}]}},{"update_id":717898506,
+"message":{"message_id":209,"from":{"id":488104559,"is_bot":false,"first_name":"Robin","last_name":"Murphy","language_code":"en"},"chat":{"id":488104559,"first_name":"Robin","last_name":"Murphy","type":"private"},"date":1553625825,"text":"@PI_FARM_BOT","entities":[{"offset":0,"length":12,"type":"mention"}]}}]}
+
+https://api.telegram.org/bot630525668:AAFtnyaswtrcPf1kIbtyr8bHLcyRogMu03s/sendmessage?chat_id=488104559&text=testing&parse_mode=HTML&disable_notification=false
