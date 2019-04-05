@@ -11,6 +11,8 @@ public class PowerCheckerApplication {
 
         ApiContextInitializer.init();
         SpringApplication.run(PowerCheckerApplication.class, args);
+
+
     }
 
 }

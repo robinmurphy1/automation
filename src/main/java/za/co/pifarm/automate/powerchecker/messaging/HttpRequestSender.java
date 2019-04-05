@@ -2,8 +2,11 @@ package za.co.pifarm.automate.powerchecker.messaging;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import za.co.pifarm.automate.powerchecker.enums.PowerStatus;
 import za.co.pifarm.automate.powerchecker.model.LocationData;
 import za.co.pifarm.automate.powerchecker.model.RequestMessage;
 
@@ -14,11 +17,10 @@ public class HttpRequestSender implements RequestSender {
     private RestTemplate restTemplate;
 
     @Override
-    public Boolean send(RequestMessage requestMessage, LocationData locationData) {
-
-        HttpEntity<RequestMessage> request = new HttpEntity(requestMessage);
+    public ResponseEntity send(RequestMessage requestMessage, LocationData locationData) {
 
         //handle exceptions
-        return restTemplate.exchange(locationData.getRemoteUrl(), locationData.getHttpMethod(), request, Boolean.class).getBody();
+        return ResponseEntity.ok(restTemplate.getForObject(locationData.getRemoteUrl(), String.class));
+
     }
 }
