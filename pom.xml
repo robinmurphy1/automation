@@ -11,7 +11,7 @@
     <groupId>za.co.pifarm.automate</groupId>
     <artifactId>powerChecker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>powerChecker</name>
+    <name>powerchecker</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
