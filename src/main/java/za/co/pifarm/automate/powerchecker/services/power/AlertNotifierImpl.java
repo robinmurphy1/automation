@@ -69,14 +69,8 @@ public class AlertNotifierImpl {
             telegramCommunicator.sendMessage(String.format("Power restored : %s", new Date()));
             powerNotificationRepository.saveAndFlush(new PowerNotification(powerNotification.getRemoteLocation(), powerStatus));
         } else if (powerStatus == PowerStatus.INVALID) {
-
+//TODO: check for this condition
         }
-    }
-
-    List<PowerData> getLastRecordsForPeriod() {
-
-        Date startTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().minusSeconds(60 * threshHoldPeriod));
-        return powerDataRepository.findPowerDataByTimestampBetweenOrderByTimestampDesc(startTime, new Date());
     }
 
     PowerStatus checkRecordedPowerTimes(List<PowerData> powerDataList) {
@@ -102,6 +96,12 @@ public class AlertNotifierImpl {
         }
 
         return PowerStatus.UNKNOWN;
+    }
+
+    List<PowerData> getLastRecordsForPeriod() {
+
+        Date startTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().minusSeconds(60 * threshHoldPeriod));
+        return powerDataRepository.findPowerDataByTimestampBetweenOrderByTimestampDesc(startTime, new Date());
     }
 
     LocalDateTime dateToLocalDateTime(Date recordedDate) {

@@ -1,0 +1,27 @@
+schedule to check to send alert
+
+schedule runs
+read PowerDataDB
+if: no records  -> return
+
+schedule runs
+read PowerDataDB
+if: last records not within threshold
+check PowerNotificationDB
+read record for location
+if: status == ERR
+ - send OK notification
+ - update PowerNotificationDB with OK
+else: status == OK
+ - return
+
+schedule runs
+read PowerDataDB
+if last records within threshold && last record within last schedule runtime
+Read PowerNotificationDB
+read record for location
+if: status == ERR
+ - return
+else: status == OK
+ - send ERR notification
+ - update PowerNotificationDB with ERR status
