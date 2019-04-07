@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>za.co.pifarm.automate</groupId>
-    <artifactId>powerChecker</artifactId>
+    <artifactId>powerchecker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>powerchecker</name>
     <description>Demo project for Spring Boot</description>
