@@ -27,7 +27,7 @@ jobs:
       skip_cleanup: true
       api_key:
         secure: "$HEROKU_TOKEN"
-      app: powerchecker
+      app: pifarmauto
 env:
   global:
     secure: HxSaT4KC6BsG6hZJg8+aTp7Cse2+J7+cIVqLsMkhnJtvCFiOxSHXcEUyxozLCUPVy7H9LYOx/9iXrld/08jeaA9QB45qcmE+rrJfhzJmQsSVtgXgq//kurdoIuhJzlfn3lGoxk778byk4eh/he6TgAt3/ESga0iM8g918DRnMNMgLxGjzAD4J9hECXnPfkclzRCjiDg6Mji6ZLaOUWuNlY5ENTMWjlYcoECU02QYDQhnddDol+GD5ITl1BHWcdvptFRsclNQXXf823ftMF21zrD+ms6NoOUvyYzSc6qy306lsioZ6016ZeSBx6IDEzFQlBDKZaW+N7MQNnoe41X4kmsf/9E4o2sLsu2naiAFa9YYJVNfhD9bYgokmdQfLiCo+9c4s2eSEBUTW3APeIvgICt279wadG05HHn+utcLHZYddrHs7OSQk21CsTi92R9NbPkpzTGQf5cfzPCSRO1W0EImkpbCGVAQv6JhkV+nC7hZrfZJeZqVldGLlt76QSAFoJTSZwI3cWvkJ4HZB5v4IHbRP1RzMX6d6idyZtE7m4mRmRY9MdxXUJ8LYWGSGlLCSyTDWl9GiwlgwoZcex6mKAZQy6661XhhAGF9P86Sn/blgq/0j5kQhZnSBkbYCkbU/N2T9rZWImjadfA4khM6k1bEOoEea5hRSZjVzgcXFUA=
