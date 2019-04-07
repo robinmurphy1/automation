@@ -60,7 +60,7 @@ public class PowerCheckerImpl implements PowerChecker {
 
         if (ObjectUtils.isEmpty(responseEntity)
                 || ObjectUtils.isEmpty(responseEntity.getBody())
-                || !responseEntity.getBody().toString().contains(statusOkMsg)) {
+                || !responseEntity.getBody().toString().contains(statusOkMsg.trim())) {
 
             if (!adhocCheck) {
                 powerDataRepository.save(new PowerData(new Date(), remoteLocation, PowerStatus.ERR));
