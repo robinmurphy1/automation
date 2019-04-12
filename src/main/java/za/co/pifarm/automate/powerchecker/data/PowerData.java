@@ -1,26 +1,25 @@
 package za.co.pifarm.automate.powerchecker.data;
 
 
-import org.hibernate.annotations.Proxy;
 import za.co.pifarm.automate.powerchecker.enums.PowerStatus;
 import za.co.pifarm.automate.powerchecker.enums.RemoteLocation;
-import za.co.pifarm.automate.powerchecker.model.LocationData;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
-@Entity(name = "POWER_DATA")
+@Entity
 @Table(name = "POWER_DATA", schema = "POWER")
-@Proxy(lazy=false)
-public class PowerData {
+public class PowerData implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(name = "TIMESTAMP")

@@ -16,22 +16,21 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = PowerDataMapperTest.Config.class)
+//@ContextConfiguration(classes = PowerDataMapperTest.Config.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class PowerDataMapperTest {
 
-    @Configuration
-    static class Config {
-
-        @Bean("file.data.mapper")
-        public PowerDataMapper createPowerDataMapper() {
-            return new PowerDataMapper();
-        }
-
-    }
+//    @Configuration
+//    static class Config {
+//
+//        @Bean
+//        public PowerDataMapper createPowerDataMapper() {
+//            return new PowerDataMapper();
+//        }
+//
+//    }
 
     @Autowired
-    @Qualifier("file.data.mapper")
     PowerDataMapper powerDataMapper;
 
     @Test

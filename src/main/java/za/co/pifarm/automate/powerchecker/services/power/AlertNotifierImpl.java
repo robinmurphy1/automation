@@ -46,18 +46,19 @@ public class AlertNotifierImpl {
 
         List<PowerData> powerDataList = getLastRecordsForPeriod();
 
-        if (ObjectUtils.isEmpty(powerDataList)) {
+        PowerStatus powerStatus = checkRecordedPowerTimes(powerDataList);
+        Optional<PowerNotification> optNotification = powerNotificationRepository.findById(RemoteLocation.HOME);
+
+        if (ObjectUtils.isEmpty(powerDataList) && optNotification.isPresent() && optNotification.get().getStatus() != PowerStatus.ERR) {
             return;
         }
-
-        PowerStatus powerStatus = checkRecordedPowerTimes(powerDataList);
-        Optional<PowerNotification> optNotification = powerNotificationRepository.findById(powerDataList.get(0).getRemoteLocation());
 
         PowerNotification powerNotification;
         if (optNotification.isPresent()) {
             powerNotification = optNotification.get();
         } else {
             powerNotification = new PowerNotification(RemoteLocation.HOME, PowerStatus.OK);
+            powerNotificationRepository.saveAndFlush(powerNotification);
         }
 
         if (powerStatus == PowerStatus.ERR
@@ -68,7 +69,7 @@ public class AlertNotifierImpl {
                 && powerNotification.getStatus() == PowerStatus.ERR) {
             telegramCommunicator.sendMessage(String.format("Power restored : %s", new Date()));
             powerNotificationRepository.saveAndFlush(new PowerNotification(powerNotification.getRemoteLocation(), powerStatus));
-        } else if (powerStatus == PowerStatus.INVALID) {
+        } else if (powerStatus == PowerStatus.UNKNOWN) {
 //TODO: check for this condition
         }
     }
@@ -100,7 +101,8 @@ public class AlertNotifierImpl {
 
     List<PowerData> getLastRecordsForPeriod() {
 
-        Date startTime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().minusSeconds(60 * threshHoldPeriod));
+        Date startTime = Date.from(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg"))
+                .toInstant().minusSeconds(MIN_SEC * threshHoldPeriod));
         return powerDataRepository.findPowerDataByTimestampBetweenOrderByTimestampDesc(startTime, new Date());
     }
 

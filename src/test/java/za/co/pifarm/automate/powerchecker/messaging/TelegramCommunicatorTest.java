@@ -26,10 +26,10 @@ public class TelegramCommunicatorTest {
             return new TelegramCommunicator();
         }
 
-        @Bean
-        public RestTemplate restTemplate() {
-            return new RestTemplate();
-        }
+//        @Bean
+//        public RestTemplate restTemplate() {
+//            return new RestTemplate();
+//        }
     }
 
     @Autowired
