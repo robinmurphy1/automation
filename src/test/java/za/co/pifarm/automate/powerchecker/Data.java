@@ -79,6 +79,20 @@ public class Data {
         return powerDataList;
     }
 
+    public static List<PowerData> createPowerDataFirstAfterRuntimePeriodOthersEntryErrWithinThreshold() {
+
+        List<PowerData> powerDataList = new ArrayList<PowerData>();
+        powerDataList.add(new PowerData(dateConverter(1), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(2), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(-15), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(-20), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(-25), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(-30), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(-60), RemoteLocation.HOME, PowerStatus.OK));
+
+        return powerDataList;
+    }
+
     static Date dateConverter(long minutes) {
         return Date.from(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toInstant().plusSeconds(minutes * 60));
     }

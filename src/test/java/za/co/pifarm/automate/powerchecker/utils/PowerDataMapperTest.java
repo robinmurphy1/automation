@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import za.co.pifarm.automate.config.PowerCheckerConfig;
 import za.co.pifarm.automate.powerchecker.enums.RemoteLocation;
 import za.co.pifarm.automate.powerchecker.model.LocationData;
 
@@ -16,19 +17,9 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringRunner.class)
-//@ContextConfiguration(classes = PowerDataMapperTest.Config.class)
+@ContextConfiguration(classes = PowerCheckerConfig.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class PowerDataMapperTest {
-
-//    @Configuration
-//    static class Config {
-//
-//        @Bean
-//        public PowerDataMapper createPowerDataMapper() {
-//            return new PowerDataMapper();
-//        }
-//
-//    }
 
     @Autowired
     PowerDataMapper powerDataMapper;

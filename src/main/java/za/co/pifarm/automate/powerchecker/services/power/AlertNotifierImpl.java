@@ -86,10 +86,10 @@ public class AlertNotifierImpl {
             LocalDateTime firstEntry = failures.get(0);
             LocalDateTime lastEntry = failures.get(failures.size() - 1);
 
-            if (firstEntry.plusMinutes(runPeriodSeconds / MIN_SEC).isAfter(LocalDateTime.now())
+            if (lastEntry.plusSeconds(runPeriodSeconds / 1000).isAfter(LocalDateTime.now())
                     && (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC) <= threshHoldPeriod) {
                 return PowerStatus.ERR;
-            } else if (firstEntry.plusMinutes(runPeriodSeconds / MIN_SEC).isBefore(LocalDateTime.now())) {
+            } else if (lastEntry.plusSeconds(runPeriodSeconds / 1000).isBefore(LocalDateTime.now())) {
                 return PowerStatus.OK;
             } else if (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC > threshHoldPeriod) {
                 return PowerStatus.OK;

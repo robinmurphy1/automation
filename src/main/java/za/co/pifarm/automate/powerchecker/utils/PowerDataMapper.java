@@ -8,7 +8,7 @@ import za.co.pifarm.automate.powerchecker.enums.RemoteLocation;
 import za.co.pifarm.automate.powerchecker.model.LocationData;
 
 
-@Component("file.data.mapper")
+@Component
 public class PowerDataMapper extends DataMapper {
 
     private @Autowired
