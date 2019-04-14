@@ -86,10 +86,12 @@ public class AlertNotifierImpl {
             LocalDateTime firstEntry = failures.get(0);
             LocalDateTime lastEntry = failures.get(failures.size() - 1);
 
-            if (lastEntry.plusSeconds(runPeriodSeconds / 1000).isAfter(LocalDateTime.now())
+            if (lastEntry.plusSeconds(runPeriodSeconds / 1000)
+                    .isAfter(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toLocalDateTime())
                     && (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC) <= threshHoldPeriod) {
                 return PowerStatus.ERR;
-            } else if (lastEntry.plusSeconds(runPeriodSeconds / 1000).isBefore(LocalDateTime.now())) {
+            } else if (lastEntry.plusSeconds(runPeriodSeconds / 1000)
+                    .isBefore(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toLocalDateTime())) {
                 return PowerStatus.OK;
             } else if (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC > threshHoldPeriod) {
                 return PowerStatus.OK;
