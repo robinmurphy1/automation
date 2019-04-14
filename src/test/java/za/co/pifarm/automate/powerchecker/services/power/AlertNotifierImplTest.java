@@ -3,15 +3,14 @@ package za.co.pifarm.automate.powerchecker.services.power;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -21,14 +20,10 @@ import za.co.pifarm.automate.config.PowerCheckerConfig;
 import za.co.pifarm.automate.powerchecker.Data;
 import za.co.pifarm.automate.powerchecker.data.PowerData;
 import za.co.pifarm.automate.powerchecker.enums.PowerStatus;
-import za.co.pifarm.automate.powerchecker.messaging.TelegramCommunicator;
 import za.co.pifarm.automate.powerchecker.repo.PowerDataRepository;
 import za.co.pifarm.automate.powerchecker.repo.PowerNotificationRepository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +35,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = {PowerCheckerConfig.class, AlertNotifierImplTest.Config.class})
 @ComponentScan("za.co.pifarm.automate.powerchecker")
 public class AlertNotifierImplTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlertNotifierImplTest.class);
 
     @Autowired
     private TestEntityManager entityManager;
@@ -91,7 +88,10 @@ public class AlertNotifierImplTest {
 
         // when - check that no records are returned
         List<PowerData> powerDataList = alertNotifier.getLastRecordsForPeriod();
+        powerDataList.forEach(data -> logger.info("powerDataList  :  {}", data));
         PowerStatus powerStatus = alertNotifier.checkRecordedPowerTimes(powerDataList);
+
+        logger.info("should be unknown status  : {}", powerStatus);
 
         //then - do not send notifications
         assertThat(powerStatus).isEqualTo(PowerStatus.UNKNOWN);
@@ -105,13 +105,14 @@ public class AlertNotifierImplTest {
 
         // when - check that records are returned
         List<PowerData> powerDataList = alertNotifier.getLastRecordsForPeriod();
+        powerDataList.forEach(data -> logger.info("powerDataList  :  {}", data));
         PowerStatus powerStatus = alertNotifier.checkRecordedPowerTimes(powerDataList);
 
         //then - do not send notifications
         assertThat(powerStatus).isEqualTo(PowerStatus.ERR);
     }
 
- @Test
+    @Test
     public void whenFirstAfterRuntimePeriodAndOthersWithinTheNotificationPeriod_thenStatusOK() {
 
         //given - a list where last entry out of runtime period and others within threshold
@@ -207,9 +208,9 @@ public class AlertNotifierImplTest {
     public void dateToLocalDateTime() {
     }
 
-    public static class Config{
+    public static class Config {
 
-        public AlertNotifierImpl createAlertNotifier(){
+        public AlertNotifierImpl createAlertNotifier() {
             return new AlertNotifierImpl();
         }
     }

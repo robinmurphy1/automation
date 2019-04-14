@@ -73,4 +73,14 @@ public class PowerData implements Serializable {
     public void setPowerStatus(PowerStatus powerStatus) {
         this.powerStatus = powerStatus;
     }
+
+    @Override
+    public String toString() {
+        return "PowerData{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", remoteLocation=" + remoteLocation +
+                ", powerStatus=" + powerStatus +
+                '}';
+    }
 }
