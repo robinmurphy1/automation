@@ -87,11 +87,11 @@ public class AlertNotifierImpl {
             LocalDateTime lastEntry = failures.get(failures.size() - 1);
 
             if (lastEntry.plusSeconds(runPeriodSeconds / 1000)
-                    .isAfter(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toLocalDateTime())
+                    .isAfter(getCurrentLocalDateTime())
                     && (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC) <= threshHoldPeriod) {
                 return PowerStatus.ERR;
             } else if (lastEntry.plusSeconds(runPeriodSeconds / 1000)
-                    .isBefore(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toLocalDateTime())) {
+                    .isBefore(getCurrentLocalDateTime())) {
                 return PowerStatus.OK;
             } else if (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC > threshHoldPeriod) {
                 return PowerStatus.OK;
@@ -105,11 +105,21 @@ public class AlertNotifierImpl {
 
         Date startTime = Date.from(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg"))
                 .toInstant().minusSeconds(MIN_SEC * threshHoldPeriod));
-        return powerDataRepository.findPowerDataByTimestampBetweenOrderByTimestampDesc(startTime, new Date());
+        return powerDataRepository.findPowerDataByTimestampBetweenOrderByTimestampDesc(startTime, getCurrentDate());
     }
 
     LocalDateTime dateToLocalDateTime(Date recordedDate) {
 
         return LocalDateTime.ofInstant(recordedDate.toInstant(), ZoneId.of("Africa/Johannesburg"));
+    }
+
+    LocalDateTime getCurrentLocalDateTime() {
+
+        return LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toLocalDateTime();
+    }
+
+    Date getCurrentDate() {
+
+        return Date.from(LocalDateTime.now().atZone(ZoneId.of("Africa/Johannesburg")).toInstant());
     }
 }
