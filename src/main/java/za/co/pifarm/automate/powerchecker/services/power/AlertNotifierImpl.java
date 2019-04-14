@@ -108,6 +108,6 @@ public class AlertNotifierImpl {
 
     LocalDateTime dateToLocalDateTime(Date recordedDate) {
 
-        return LocalDateTime.ofInstant(recordedDate.toInstant(), ZoneId.systemDefault());
+        return LocalDateTime.ofInstant(recordedDate.toInstant(), ZoneId.of("Africa/Johannesburg"));
     }
 }
