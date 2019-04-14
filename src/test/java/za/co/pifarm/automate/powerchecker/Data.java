@@ -58,7 +58,7 @@ public class Data {
         powerDataList.add(new PowerData(dateConverter(2), RemoteLocation.HOME, PowerStatus.ERR));
         powerDataList.add(new PowerData(dateConverter(-1), RemoteLocation.HOME, PowerStatus.ERR));
         powerDataList.add(new PowerData(dateConverter(-39), RemoteLocation.HOME, PowerStatus.ERR));
-        powerDataList.add(new PowerData(dateConverter(-40), RemoteLocation.HOME, PowerStatus.ERR));
+        powerDataList.add(new PowerData(dateConverter(-45), RemoteLocation.HOME, PowerStatus.ERR));
         powerDataList.add(new PowerData(dateConverter(-50), RemoteLocation.HOME, PowerStatus.ERR));
         powerDataList.add(new PowerData(dateConverter(-60), RemoteLocation.HOME, PowerStatus.ERR));
 
