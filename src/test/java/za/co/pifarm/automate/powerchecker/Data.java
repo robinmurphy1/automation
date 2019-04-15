@@ -1,6 +1,7 @@
 package za.co.pifarm.automate.powerchecker;
 
 import za.co.pifarm.automate.powerchecker.data.PowerData;
+import za.co.pifarm.automate.powerchecker.data.PowerNotification;
 import za.co.pifarm.automate.powerchecker.enums.PowerStatus;
 import za.co.pifarm.automate.powerchecker.enums.RemoteLocation;
 
@@ -12,6 +13,14 @@ import java.util.List;
 
 public class Data {
 
+    public static PowerNotification createPowerNotificationOk(){
+        return new PowerNotification(RemoteLocation.HOME, PowerStatus.OK);
+    }
+
+    public static PowerNotification createPowerNotificationErr(){
+        return new PowerNotification(RemoteLocation.HOME, PowerStatus.ERR);
+    }
+
     public static List<PowerData> createPowerDataWithinThreshold() {
 
         List<PowerData> powerDataList = new ArrayList<PowerData>();
@@ -19,6 +28,14 @@ public class Data {
         powerDataList.add(new PowerData(dateConverter(-10), RemoteLocation.HOME, PowerStatus.ERR));
         powerDataList.add(new PowerData(dateConverter(-20), RemoteLocation.HOME, PowerStatus.ERR));
         powerDataList.add(new PowerData(dateConverter(-29), RemoteLocation.HOME, PowerStatus.ERR));
+
+        return powerDataList;
+    }
+
+    public static List<PowerData> createPowerDataSingleEntry() {
+
+        List<PowerData> powerDataList = new ArrayList<PowerData>();
+        powerDataList.add(new PowerData(dateConverter(-0), RemoteLocation.HOME, PowerStatus.ERR));
 
         return powerDataList;
     }

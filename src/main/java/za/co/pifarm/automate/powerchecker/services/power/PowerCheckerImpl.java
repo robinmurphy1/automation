@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import za.co.pifarm.automate.powerchecker.data.PowerData;
-import za.co.pifarm.automate.powerchecker.enums.AlertClient;
 import za.co.pifarm.automate.powerchecker.enums.PowerStatus;
 import za.co.pifarm.automate.powerchecker.enums.RemoteLocation;
 import za.co.pifarm.automate.powerchecker.messaging.RequestSender;
@@ -17,7 +16,6 @@ import za.co.pifarm.automate.powerchecker.messaging.TelegramCommunicator;
 import za.co.pifarm.automate.powerchecker.model.LocationData;
 import za.co.pifarm.automate.powerchecker.model.RequestMessage;
 import za.co.pifarm.automate.powerchecker.repo.PowerDataRepository;
-import za.co.pifarm.automate.powerchecker.repo.PowerNotificationRepository;
 import za.co.pifarm.automate.powerchecker.utils.PowerDataMapper;
 
 import java.util.Date;
@@ -68,14 +66,6 @@ public class PowerCheckerImpl implements PowerChecker {
             return PowerStatus.ERR;
         }
         return PowerStatus.OK;
-    }
-
-    @Override
-    public void triggerAlert(AlertClient alertClient, String message) {
-
-        if (AlertClient.TELEGRAM == alertClient) {
-            telegramCommunicator.sendMessage(message);
-        }
     }
 
     @Scheduled(fixedRateString = "${power.checker.schedule.period}", initialDelayString = "${power.checker.schedule.delay}")

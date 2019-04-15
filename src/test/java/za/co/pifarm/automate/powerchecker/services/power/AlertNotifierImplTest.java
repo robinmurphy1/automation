@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,12 +18,15 @@ import org.springframework.web.client.RestTemplate;
 import za.co.pifarm.automate.config.PowerCheckerConfig;
 import za.co.pifarm.automate.powerchecker.Data;
 import za.co.pifarm.automate.powerchecker.data.PowerData;
+import za.co.pifarm.automate.powerchecker.data.PowerNotification;
 import za.co.pifarm.automate.powerchecker.enums.PowerStatus;
+import za.co.pifarm.automate.powerchecker.enums.RemoteLocation;
 import za.co.pifarm.automate.powerchecker.repo.PowerDataRepository;
 import za.co.pifarm.automate.powerchecker.repo.PowerNotificationRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,7 +52,7 @@ public class AlertNotifierImplTest {
     @Autowired
     PowerDataRepository powerDataRepository;
 
-    @MockBean
+    @Autowired
     PowerNotificationRepository powerNotificationRepository;
 
 //    @Mock
@@ -127,15 +129,78 @@ public class AlertNotifierImplTest {
     }
 
     @Test
-    public void whenFirstEntryAndOthersWithinTheNotificationPeriod_thenSendFailNotification() {
+    @Transactional
+    @Rollback
+    public void whenFirstEntryOnly_thenUpdateNotificationRecord_andSendNoNotification() {
+
+        Data.createPowerDataSingleEntry().forEach(data -> entityManager.persistAndFlush(data));
+
+        alertNotifier.sendNotificatons();
+
+        Optional<PowerNotification> notification = powerNotificationRepository.findById(RemoteLocation.HOME);
+
+        if (notification.isPresent()) {
+            assertThat(notification.get().getStatus()).isEqualTo(PowerStatus.OK);
+        } else {
+            throw new RuntimeException();
+        }
+
+
+    }
+
+    @Test
+    public void whenFirstEntryAndOthersWithinTheNotificationPeriod_thenSendNotification() {
+
+        Data.createPowerDataWithinThreshold().forEach(data -> entityManager.persistAndFlush(data));
+        //Notification not yet been set
+        entityManager.persistAndFlush(Data.createPowerNotificationOk());
+
+        alertNotifier.sendNotificatons();
+
+        Optional<PowerNotification> notification = powerNotificationRepository.findById(RemoteLocation.HOME);
+
+        if (notification.isPresent()) {
+            assertThat(notification.get().getStatus()).isEqualTo(PowerStatus.ERR);
+        } else {
+            throw new RuntimeException();
+        }
+
     }
 
     @Test
     public void whenFirstEntryAndOthersWithinTheNotificationPeriodAndNotificationSent_thenNoNotification() {
+
+        Data.createPowerDataWithinThreshold().forEach(data -> entityManager.persistAndFlush(data));
+        //ERR notification already sent
+        entityManager.persistAndFlush(Data.createPowerNotificationErr());
+
+        alertNotifier.sendNotificatons();
+
+        Optional<PowerNotification> notification = powerNotificationRepository.findById(RemoteLocation.HOME);
+
+        if (notification.isPresent()) {
+            assertThat(notification.get().getStatus()).isEqualTo(PowerStatus.ERR);
+        } else {
+            throw new RuntimeException();
+        }
+
     }
 
     @Test
     public void whenNotificationSentAndFirstEntryOutsidePeriod_thenSendOkNotification() {
+
+        Data.createPowerDataFirstAfterRuntimePeriodOthersEntryErrWithinThreshold().forEach(data -> entityManager.persistAndFlush(data));
+        entityManager.persistAndFlush(Data.createPowerNotificationErr());
+
+        alertNotifier.sendNotificatons();
+
+        Optional<PowerNotification> notification = powerNotificationRepository.findById(RemoteLocation.HOME);
+
+        if (notification.isPresent()) {
+            assertThat(notification.get().getStatus()).isEqualTo(PowerStatus.OK);
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     @Test
@@ -174,31 +239,6 @@ public class AlertNotifierImplTest {
 //
     }
 
-    List<PowerData> createPowerDataWithinThreshold() {
-
-        return Data.createPowerDataWithinThreshold();
-    }
-
-    List<PowerData> createPowerDataWithinAndOutThreshold() {
-
-        return Data.createPowerDataWithinAndOutThreshold();
-    }
-
-    List<PowerData> createPowerDataNotWithinThreshold() {
-
-        return Data.createPowerDataNotWithinThreshold();
-    }
-
-    List<PowerData> createPowerDataFirstEntryWithinThreshold() {
-
-        return Data.createPowerDataFirstEntryWithinThreshold();
-    }
-
-    List<PowerData> createPowerDataThreeEntryErrWithinThreshold() {
-
-        return Data.createPowerDataThreeEntryErrWithinThreshold();
-    }
-
 
     @Test
     public void sendPowerAlert() {
@@ -210,9 +250,7 @@ public class AlertNotifierImplTest {
 
     public static class Config {
 
-        public AlertNotifierImpl createAlertNotifier() {
-            return new AlertNotifierImpl();
-        }
+
     }
 
 

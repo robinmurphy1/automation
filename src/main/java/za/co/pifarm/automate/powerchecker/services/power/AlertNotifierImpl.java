@@ -49,7 +49,9 @@ public class AlertNotifierImpl {
         PowerStatus powerStatus = checkRecordedPowerTimes(powerDataList);
         Optional<PowerNotification> optNotification = powerNotificationRepository.findById(RemoteLocation.HOME);
 
-        if (ObjectUtils.isEmpty(powerDataList) && optNotification.isPresent() && optNotification.get().getStatus() != PowerStatus.ERR) {
+        if (ObjectUtils.isEmpty(powerDataList)
+                && optNotification.isPresent()
+                && optNotification.get().getStatus() != PowerStatus.ERR) {
             return;
         }
 
@@ -59,15 +61,16 @@ public class AlertNotifierImpl {
         } else {
             powerNotification = new PowerNotification(RemoteLocation.HOME, PowerStatus.OK);
             powerNotificationRepository.saveAndFlush(powerNotification);
+            return;
         }
 
         if (powerStatus == PowerStatus.ERR
                 && powerNotification.getStatus() == PowerStatus.OK) {
-            telegramCommunicator.sendMessage(String.format("Power failure : %s", new Date()));
+            telegramCommunicator.sendMessage(String.format("Power failure : %s", getCurrentLocalDateTime()));
             powerNotificationRepository.saveAndFlush(new PowerNotification(powerNotification.getRemoteLocation(), powerStatus));
         } else if (powerStatus == PowerStatus.OK
                 && powerNotification.getStatus() == PowerStatus.ERR) {
-            telegramCommunicator.sendMessage(String.format("Power restored : %s", new Date()));
+            telegramCommunicator.sendMessage(String.format("Power restored : %s", getCurrentLocalDateTime()));
             powerNotificationRepository.saveAndFlush(new PowerNotification(powerNotification.getRemoteLocation(), powerStatus));
         } else if (powerStatus == PowerStatus.UNKNOWN) {
 //TODO: check for this condition
