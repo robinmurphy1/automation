@@ -1,5 +1,7 @@
 package za.co.pifarm.automate.powerchecker.services.power;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AlertNotifierImpl {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlertNotifierImpl.class);
 
     @Autowired
     private PowerDataRepository powerDataRepository;
@@ -63,6 +67,7 @@ public class AlertNotifierImpl {
             powerNotificationRepository.saveAndFlush(powerNotification);
             return;
         }
+        logger.info("power status : {} :: powerNotification : {}", powerStatus, powerNotification.getStatus());
 
         if (powerStatus == PowerStatus.ERR
                 && powerNotification.getStatus() == PowerStatus.OK) {
@@ -92,15 +97,18 @@ public class AlertNotifierImpl {
             if (lastEntry.plusSeconds(runPeriodSeconds / 1000)
                     .isAfter(getCurrentLocalDateTime())
                     && (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC) <= threshHoldPeriod) {
+                logger.info("Power reporting as ERR");
                 return PowerStatus.ERR;
             } else if (lastEntry.plusSeconds(runPeriodSeconds / 1000)
                     .isBefore(getCurrentLocalDateTime())) {
+                logger.info("Power reporting as OK");
                 return PowerStatus.OK;
             } else if (Duration.between(firstEntry, lastEntry).getSeconds() / MIN_SEC > threshHoldPeriod) {
                 return PowerStatus.OK;
             }
         }
 
+        logger.info("Power reporting as UNKNOWN");
         return PowerStatus.UNKNOWN;
     }
 

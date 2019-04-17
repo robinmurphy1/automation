@@ -56,6 +56,7 @@ public class PowerCheckerImpl implements PowerChecker {
 
     PowerStatus logPowerStatus(ResponseEntity responseEntity, Boolean adhocCheck, RemoteLocation remoteLocation) {
 
+        logger.info("Response : {} ", responseEntity.getBody().toString());
         if (ObjectUtils.isEmpty(responseEntity)
                 || ObjectUtils.isEmpty(responseEntity.getBody())
                 || !responseEntity.getBody().toString().contains(statusOkMsg.trim())) {
